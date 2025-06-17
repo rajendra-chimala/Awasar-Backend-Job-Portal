@@ -10,7 +10,6 @@ const userModel = new mongoose.Schema({
   cvUrl: { type: String },
   bio: { type: String },
   role: { type: String, enum: ['recruiter', 'user'], default: 'user' },
-  companyId: { type: mongoose.Schema.Types.ObjectId, ref: 'Company' },
   createdAt: { type: Date, default: Date.now }
 });
 
