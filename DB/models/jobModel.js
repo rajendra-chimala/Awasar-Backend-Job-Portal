@@ -4,7 +4,7 @@ const jobModel = new mongoose.Schema({
   jobTitle: { type: String, required: true },
   description: { type: String, required: true },
   contact:{type: String, required: true},
-  salary: { type: Number },
+  salary: { type: String },
   location: { type: String },
   type: {
     type: String,

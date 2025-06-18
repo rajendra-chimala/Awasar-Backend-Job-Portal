@@ -1,10 +1,10 @@
 const multer = require('multer');
 const path = require('path');
 
-// Storage configuration
+// Storage
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'uploads/profiles'); // Ensure this folder exists
+    cb(null, 'uploads/cv'); // Folder for CVs (make sure it exists)
   },
   filename: function (req, file, cb) {
     const ext = path.extname(file.originalname);
@@ -13,24 +13,23 @@ const storage = multer.diskStorage({
   }
 });
 
-// File filter (optional - allows only image files)
+// File filter - allow only PDF and Word docs
 const fileFilter = (req, file, cb) => {
-  const allowedTypes = /jpeg|jpg|png|webp/;
+  const allowedTypes = /pdf|doc|docx/;
   const ext = allowedTypes.test(path.extname(file.originalname).toLowerCase());
   const mime = allowedTypes.test(file.mimetype);
-  if (ext && mime) {
+  if (ext || mime) {
     cb(null, true);
   } else {
-    cb(new Error('Only image files are allowed!'), false);
+    cb(new Error('Only .pdf, .doc, .docx files are allowed!'), false);
   }
 };
 
-// Multer middleware
-const uploadProfileImage = multer({
+// Multer instance
+const uploadCV = multer({
   storage: storage,
   fileFilter: fileFilter,
-  limits: { fileSize: 5 * 1024 * 1024 } // 2MB limit
+  limits: { fileSize: 10 * 1024 * 1024 } // 5MB max
 });
 
-module.exports = uploadProfileImage;
-  
+module.exports = uploadCV;
