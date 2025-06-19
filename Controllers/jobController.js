@@ -57,4 +57,22 @@ const getAllJobs = async (req, res) => {
   }
 };
 
-module.exports = { createJob, updateJob, deleteJob, getAllJobs };
+
+const searchJobs = async (req, res) => {
+  const { query } = req.query;
+
+  try {
+    const jobs = await Job.find({
+      $or: [
+        { title: { $regex: query, $options: 'i' } },
+        { description: { $regex: query, $options: 'i' } }
+      ]
+    });
+
+    res.status(200).json(jobs);
+  } catch (error) {
+    console.error('Error searching jobs:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+module.exports = { createJob, searchJobs, updateJob, deleteJob, getAllJobs };
