@@ -1,21 +1,14 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const {
-  createApplication,
-  getAllApplications,
-  deleteApplication
-} = require('../Controllers/applicationController');
-
-const authMiddleware = require('../Middleware/authMiddleware');
-const uploadCV = require('../Middleware/uploadCV'); 
 
 
-router.post('/', authMiddleware, createApplication);
+const { createApplication, getAllApplications, deleteApplication } = require("../Controllers/applicationController");
+const authenticateUser = require("../Middleware/authenticateUser");
 
+router.post("/", authenticateUser,createApplication);
 
-router.get('/', authMiddleware, getAllApplications);
+router.get("/",getAllApplications ); 
 
-
-router.delete('/:id', authMiddleware, deleteApplication);
+router.delete("/:id", deleteApplication);
 
 module.exports = router;

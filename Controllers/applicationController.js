@@ -1,4 +1,4 @@
-const Application = require('../DB/models/applicationModel');
+const Application = require('../DB/models/application');
 const User = require('../DB/models/userModel');
 const Job = require('../DB/models/jobModel');
 
@@ -14,7 +14,7 @@ const createApplication = async (req, res) => {
     }
 
     // Get recruiterId from job
-    const recruiterId = job.recruiterId;
+    const recruiterId = job.companyId;
 
     // Get applicant CV
     const user = await User.findById(applicantId);
@@ -70,4 +70,9 @@ const deleteApplication = async (req, res) => {
   }
 };
 
-module.export = {createApplication,getAllApplications,deleteApplication};
+
+module.exports = {
+  createApplication,
+  getAllApplications,
+  deleteApplication
+};

@@ -12,6 +12,7 @@ app.use(cors());
 app.use("/api/",require('./Routes/userRoutes'));
 app.use("/api/recruiter", require('./Routes/recruiterRoute'));
 app.use("/api/jobs", require('./Routes/jobRoute'));
+app.use("/api/applications", require('./Routes/ApplicationRoute'));
 
 
 app.listen(process.env.PORT, ()=>{
