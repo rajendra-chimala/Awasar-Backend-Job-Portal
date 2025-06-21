@@ -93,4 +93,18 @@ const jobs = await Job.find({ companyId: req.params.id })
     res.status(500).json({ message: 'Server error' });
   }
 };
-module.exports = { createJob, searchJobs, updateJob, deleteJob, getAllJobs,getJobById };
+
+const getSingleJobById = async (req,res)=>{
+  const {id} = req.params;
+  try {
+const jobs = await Job.findById(req.params.id )
+
+    if (!jobs) return res.status(404).json({ message: 'Job not found' });
+
+    res.json(jobs);
+  } catch (err) {
+    console.error('Fetch Job by ID Error:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+}
+module.exports = { createJob, searchJobs, updateJob, deleteJob, getAllJobs,getJobById,getSingleJobById };
