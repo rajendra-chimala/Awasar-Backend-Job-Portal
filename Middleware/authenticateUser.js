@@ -10,7 +10,8 @@ const authenticateUser = async (req, res, next) => {
     const recruiter = await User.findById(decoded.id);
     if (!recruiter) return res.status(401).json({ message: 'Invalid token' });
 
-    req.user = recruiter;
+    // console.log("RID : "+recruiter._id)
+    req.user = recruiter._id;
     next();
   } catch (err) {
     return res.status(403).json({ message: 'Unauthorized access' });

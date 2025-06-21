@@ -16,6 +16,10 @@ const jobModel = new mongoose.Schema({
     ref: "Company",
     required: true,
   },
+  companyProfile:{
+    type:String,
+    required:true
+  },
   requirement: [{ type: String }],
   responsibility: [{ type: String }],
   postedAt: { type: Date, default: Date.now },

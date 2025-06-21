@@ -1,12 +1,15 @@
 const Job = require('../DB/models/jobModel');
+const Company = require('../DB/models/recruiterModel'); 
 
 // Create Job
 const createJob = async (req, res) => {
   try {
-    const { jobTitle, description, location, salary,contact,type } = req.body;
+    const { jobTitle, description, location, salary,contact,type,requirement,responsibility,deadline,tags  } = req.body;
     const companyId = req.user._id;
+    const company = await Company.findById(companyId);
+    const companyProfile = company.profileUrl ;
 
-    const job = new Job({ jobTitle, description, location, salary,type, companyId,contact });
+    const job = new Job({ jobTitle, description, location, salary,type, companyId,contact,companyProfile,requirement,responsibility,deadline,tags  });
     await job.save();
 
     res.status(201).json({ message: 'Job created successfully', job });
@@ -75,4 +78,19 @@ const searchJobs = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
-module.exports = { createJob, searchJobs, updateJob, deleteJob, getAllJobs };
+
+const getJobById = async (req, res) => {
+  const { id } = req.params;
+ 
+  try {
+const jobs = await Job.find({ companyId: req.params.id })
+
+    if (!jobs) return res.status(404).json({ message: 'Job not found' });
+
+    res.json(jobs);
+  } catch (err) {
+    console.error('Fetch Job by ID Error:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+module.exports = { createJob, searchJobs, updateJob, deleteJob, getAllJobs,getJobById };

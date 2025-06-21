@@ -49,9 +49,10 @@ const registerRecruiter = async (req, res) => {
 const loginRecruiter = async (req, res) => {
   try {
     const { email, password } = req.body;
-    console.log(email);
+    
 
     const recruiter = await Company.findOne( {email} );
+    const id = recruiter._id;
     console.log(recruiter);
     if (!recruiter) {
       return res.status(400).json({ message: 'Invalid email or password bnbn' });
@@ -63,17 +64,37 @@ const loginRecruiter = async (req, res) => {
     }
 
     const token = jwt.sign({ id: recruiter._id }, process.env.JWT_SECRET, {
-      expiresIn: '1h',
+      expiresIn: '30d',
     });
 
-    res.status(200).json({ message: 'Login successful', token });
+    res.status(200).json({ message: 'Login successful', token,id });
   } catch (error) {
     console.error('Error logging in recruiter:', error);
     res.status(500).json({ message: 'Server error' });
   }
 };
 
+const getRecruiterById = async (req,res)=>{
+
+  try {
+    const recruiterId = req.params.id;
+    console.log(req.params.id)
+    const recruiter = await Company.findById(recruiterId).select('-password');
+    if (!recruiter) {
+      return res.status(404).json({ message: 'Recruiter not found' });
+    }
+    console.log(recruiter);
+    res.status(200).json(recruiter);
+
+}
+  catch (error) {
+    console.error('Error fetching recruiter:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+}
+
 module.exports = {
   registerRecruiter,
   loginRecruiter,
+  getRecruiterById
 };
