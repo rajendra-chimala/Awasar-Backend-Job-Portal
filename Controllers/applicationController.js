@@ -14,7 +14,7 @@ const createApplication = async (req, res) => {
       return res.status(404).json({ message: 'Job not found' });
     }
 
-    const applicant = await Application.findOne({applicantId});
+    const applicant = await Application.findOne({applicantId,jobId});
     console.log(applicant);
     if (applicant) {
       return res.status(404).json({ message: 'Already Applied !' });
