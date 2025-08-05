@@ -1,41 +1,35 @@
 const multer = require("multer");
-const { v2: cloudinary } = require("cloudinary");
-const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const path = require("path");
 
-// Cloudinary config
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
-
-// Cloudinary storage config
-const storage = new CloudinaryStorage({
-  cloudinary,
-  params: {
-    folder: "cv",
-    allowed_formats: ["pdf", "doc", "docx"],
-    resource_type: "raw"
+// Storage
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads/cv"); // Folder for CVs (make sure it exists)
+  },
+  filename: function (req, file, cb) {
+    const ext = path.extname(file.originalname);
+    const uniqueName = Date.now() + "-" + Math.round(Math.random() * 1e9) + ext;
+    cb(null, uniqueName);
   },
 });
 
-// File filter
+// File filter - allow only PDF and Word docs
 const fileFilter = (req, file, cb) => {
   const allowedTypes = /pdf|doc|docx/;
-  const ext = allowedTypes.test(file.originalname.toLowerCase());
+  const ext = allowedTypes.test(path.extname(file.originalname).toLowerCase());
   const mime = allowedTypes.test(file.mimetype);
-  if (ext && mime) {
+  if (ext || mime) {
     cb(null, true);
   } else {
     cb(new Error("Only .pdf, .doc, .docx files are allowed!"), false);
   }
 };
 
-// Multer setup
+// Multer instance
 const uploadCV = multer({
-  storage,
-  fileFilter,
-  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
+  storage: storage,
+  fileFilter: fileFilter,
+  limits: { fileSize: 10 * 1024 * 1024 }, // 5MB max
 });
 
 module.exports = uploadCV;
