@@ -5,16 +5,16 @@ const onlyRecruiter = require('../Middleware/onlyRecruiter');
 
 const router = express.Router();
 
-// Public route
-router.get('/jobs', getAllJobs);
+// Public routes
+router.get('/get-job/:id', getSingleJobById);
+router.get('/all-jobs', getAllJobs);
 
 // Recruiter-only routes
 router.post('/jobs', authenticateJWT, onlyRecruiter, createJob);
 router.put('/jobs/:id', authenticateJWT, onlyRecruiter, updateJob);
-router.delete('/jobs/:id', authenticateJWT, onlyRecruiter, deleteJob);
-router.get('/get-job-by-id/:id',getJobById);
-router.get('/jobs/search', searchJobs);
-router.get('/job/:id',getSingleJobById)
+router.delete('/:id', deleteJob);
+router.get('/get-job-by-id/:id', getJobById);
+router.get('/search', searchJobs);
 
 
 module.exports = router;

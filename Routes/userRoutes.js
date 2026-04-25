@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { userRegister, loginUser, getUserById, updateProfile } = require("../Controllers/userController");
+const { userRegister, loginUser, getUserById, updateProfile, getAllUsers, deleteUser } = require("../Controllers/userController");
 const upload = require("../Middleware/uploadCombines");
 const authenticateUser = require("../Middleware/authenticateUser");
 
@@ -21,6 +21,10 @@ router.put('/update-profile/:id', upload.fields([
     { name: "cvUrl", maxCount: 1 },
     { name: "profile", maxCount: 1 },
   ]),updateProfile);
+
+
+router.get("/users",getAllUsers);
+router.delete("/user/:id",deleteUser)
 
 
 

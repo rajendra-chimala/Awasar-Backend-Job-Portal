@@ -6,6 +6,10 @@ const applicationSchema = new mongoose.Schema({
     ref: 'Job',
     required: true
   },
+  jobTitle: {
+    type: String,
+    required: true
+  },
   applicantId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
