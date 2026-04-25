@@ -15,6 +15,7 @@ app.use("/api/recruiter", require('./Routes/recruiterRoute'));
 app.use("/api/jobs", require('./Routes/jobRoute'));
 app.use("/api/applications", require('./Routes/ApplicationRoute'));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use("/api/admin", require('./Routes/adminRoute'));
 
 
 app.listen(process.env.PORT, ()=>{

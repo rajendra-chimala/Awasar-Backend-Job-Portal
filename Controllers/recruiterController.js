@@ -1,6 +1,7 @@
 const Company = require('../DB/models/recruiterModel'); // adjust path as needed
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const jobModel = require('../DB/models/jobModel');
 
 // Register Recruiter
 const registerRecruiter = async (req, res) => {
@@ -93,8 +94,49 @@ const getRecruiterById = async (req,res)=>{
   }
 }
 
+
+const getAllRecruiters = async (req,res)=>{
+
+  try {
+    const recruiters = await Company.find({role:'recruiter'}).select('-password');
+    res.status(200).json(recruiters);
+  } catch (error) {
+    console.error('Error fetching recruiters:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+}
+
+const deleteRecruiter = async (req,res)=>{
+
+  try {
+    const recruiterId = req.params.id;
+    const deleted = await Company.findByIdAndDelete(recruiterId);
+
+    const jobsDeleted = await jobModel.deleteMany({ companyId: recruiterId });
+    const applicationsDeleted = await Application.deleteMany({ recruiterId: recruiterId });
+
+    if(jobsDeleted.deletedCount > 0) {
+      console.log(`Deleted ${jobsDeleted.deletedCount} jobs associated with recruiter ${recruiterId}`);
+    }
+    if(applicationsDeleted.deletedCount > 0) {
+      console.log(`Deleted ${applicationsDeleted.deletedCount} applications associated with recruiter ${recruiterId}`);
+    }
+
+    if (!deleted) {
+      return res.status(404).json({ message: 'Recruiter not found' });
+    }
+    res.status(200).json({ message: 'Recruiter deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting recruiter:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+}
+
 module.exports = {
   registerRecruiter,
   loginRecruiter,
-  getRecruiterById
+  getRecruiterById,
+  getAllRecruiters,
+  deleteRecruiter
 };
+
